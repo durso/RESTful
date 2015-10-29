@@ -16,13 +16,8 @@ class Collection{
     public function getCollection(){
          $rows = $this->gateway->select();
          $result = array();
-         $i = 0;
          foreach($rows as $row){
-             $fields = get_object_vars($row);
-             foreach($fields as $key => $value){
-                $result[$i][$key] = $value; 
-             }
-             $i++;
+             $result[] = $row;
          }
          return $result;
     }

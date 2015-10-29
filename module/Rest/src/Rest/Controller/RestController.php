@@ -135,6 +135,8 @@ class RestController extends AbstractActionController{
             if(!$validatorId->isValid($resource['id']) || $id != $resource['id']){
                 $error = true;
             }
+        } else {
+            $error = array_key_exists("id", $resource);
         }
         $validatorName = new \Zend\I18n\Validator\Alnum(array('allowWhiteSpace' => true));
         if(!$validatorName->isValid($resource['name']) && !$error){
