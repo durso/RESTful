@@ -46,7 +46,7 @@ namespace Rest\Model;
     public function getXML(){
         $xml = new \SimpleXMLElement("<".$this->rootXML."/>");
         foreach($this->response as $key => $value){
-            if($value instanceof Resource){
+            if(!is_string($value)){
                 $resource = $xml->addChild("resource");
                 foreach($value as $childkey => $childvalue){
                     $resource->addChild($childkey, $childvalue);

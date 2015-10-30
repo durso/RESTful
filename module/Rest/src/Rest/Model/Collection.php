@@ -14,12 +14,8 @@ class Collection{
     }
     
     public function getCollection(){
-         $rows = $this->gateway->select();
-         $result = array();
-         foreach($rows as $row){
-             $result[] = $row;
-         }
-         return $result;
+        $rows = $this->gateway->select();
+        return iterator_to_array($rows);
     }
     public function read($id){
         $result = $this->gateway->select(array('id' => $id));
