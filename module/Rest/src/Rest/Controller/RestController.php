@@ -7,7 +7,7 @@ use Zend\Http\Response;
 
 class RestController extends AbstractActionController{
      
-    private $carsTable;
+    private $tables;
     private $auth;
     protected $ext;
     protected $code = 200;
@@ -28,7 +28,12 @@ class RestController extends AbstractActionController{
     }
 
     private function getRestServer(){
-        $restServer = new \Rest\Model\Rest($this->getCarsTable());
+        $tableName = ucfirst(strtolower($this->getEvent()->getRouteMatch()->getParam('collection')));
+        //just add the table name in the array below (don't forget to add the new collection on the router)
+        if(!in_array($tableName, array("Cars"))){
+            throw new \Exception("Invalid Collection name");
+        }
+        $restServer = new \Rest\Model\Rest($this->getTable($tableName));
         $method = $this->getRequest()->getMethod();
         switch($method){
            case 'GET':     $this->readAction($restServer);
@@ -100,12 +105,12 @@ class RestController extends AbstractActionController{
         return json_decode($content,true);
     }
     
-    private function getCarsTable(){
-         if (!$this->carsTable) {
+    private function getTable($tableName){
+         if (!$this->tables[$tableName]) {
              $sl = $this->getServiceLocator();
-             $this->carsTable = $sl->get('Rest\Model\CarsTable');
+             $this->tables[$tableName] = $sl->get('Rest\Model\\'.$tableName.'Table');
          }
-         return $this->carsTable;
+         return $this->tables[$tableName];
     }
     
     private function getAuth(){
